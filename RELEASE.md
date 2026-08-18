@@ -1,4 +1,4 @@
-# Release v5
+# Release v6
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -25,3 +25,9 @@
 
 - Neuer QR-Breiten-Slider in % sowie Text-Ausrichtung oben/mittig/unten.
 - Automatische QR-Größe und Text-Ausrichtung berücksichtigen jetzt die tatsächliche Zeilenzahl.
+
+- QR-Renderer korrigiert: der bisher intern fest reservierte 4-Modul-Rand ist jetzt einstellbar (0/1/2/4).
+- 50×30 Seitenlayout nutzt nur noch 2 px äußeren QR-Abstand und kann die volle Labelhöhe besser ausnutzen.
+- QR-ECC L/M/Q/H konfigurierbar; dynamische 50×30-Vorlage nutzt standardmäßig ECC L + 1 Modul Rand für größere Druckmodule.
+- Optionaler QuickChart-QR-Renderer mit automatischem lokalem Fallback.
+- Renderstatus zeigt jetzt QR-Feld- und tatsächliche Code-Pixelgröße.
