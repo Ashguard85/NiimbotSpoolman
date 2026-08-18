@@ -1,4 +1,4 @@
-# Spoolman NIIMBOT Labels – Docker v2
+# Spoolman NIIMBOT Labels – Docker v3
 
 Vollständige Fullstack-Version des Spoolman-Label-Dienstes. Enthält Flask-Backend, SQLite, Spoolman-Proxy, Templates, Druckverlauf, Backup/Restore, PWA-Frontend und alle statischen Assets.
 
@@ -82,7 +82,7 @@ Das Docker-Frontend kann normal über Cloudflare Access/OTP geschützt werden. F
 
 ## Pages-Kompatibilität
 
-Docker v2 ↔ Pages v2. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
+Docker v3 ↔ Pages v3. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
 
 ## Backup / Restore
 
@@ -92,7 +92,7 @@ JSON-Format `spoolman-niimbot-backup`, Version 2. Server-Backups enthalten Templ
 
 - Hardwaredruck muss auf echtem B1 getestet werden.
 - 40×40, 30×20 und 50×50 sind geometrisch abgeleitet; 50×30 nutzt die bekannte B1-Geometrie 384×240.
-- QR-/NIIMBOT-Browserbibliotheken werden in v2 von UNPKG geladen und anschließend vom Service Worker gecacht.
+- QR-/NIIMBOT-Browserbibliotheken werden in v3 von UNPKG geladen und anschließend vom Service Worker gecacht.
 
 ## Direkte Aufrufe
 

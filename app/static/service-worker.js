@@ -1,4 +1,4 @@
-const CACHE="spoolman-niimbot-v2";
+const CACHE="spoolman-niimbot-v3";
 const SHELL=["./","./index.html","./app.css?v=2","./app.js?v=2","./config.js?v=2","./storage.js?v=2","./printer.js?v=2","./manifest.webmanifest?v=2","./offline.html","./icons/icon-192.png","./icons/icon-512.png","./icons/icon-maskable-512.png","./icons/apple-touch-icon.png","./icons/favicon.png"];
 self.addEventListener("install",e=>e.waitUntil(caches.open(CACHE).then(c=>c.addAll(SHELL))));
 self.addEventListener("activate",e=>e.waitUntil(caches.keys().then(a=>Promise.all(a.filter(k=>k!==CACHE).map(k=>caches.delete(k))))));

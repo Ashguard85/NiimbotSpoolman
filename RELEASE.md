@@ -1,4 +1,4 @@
-# Release v2
+# Release v3
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -18,3 +18,5 @@
 - Layoutwahl: Automatisch, QR links oder QR oben.
 - Neue 50×30-Vorlage „Spoolman dynamisch“ im Stil QR links / Daten rechts.
 - Alte v1-Vorlagen und v1-Backups bleiben importierbar.
+
+- 50×30-Querformat: QR links nutzt jetzt nahezu die volle nutzbare Labelhöhe; Text rechts skaliert dynamisch in der Restbreite.
