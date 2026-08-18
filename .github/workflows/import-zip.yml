@@ -1,0 +1,45 @@
+name: Import ZIP Release
+on:
+  push:
+    branches: [main]
+    paths: ['*.zip']
+  workflow_dispatch:
+permissions:
+  contents: write
+concurrency:
+  group: zip-import
+  cancel-in-progress: false
+jobs:
+  import:
+    if: github.actor != 'github-actions[bot]'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          fetch-depth: 0
+      - name: Import exactly one ZIP
+        shell: bash
+        run: |
+          set -euo pipefail
+          mapfile -t zips < <(find . -maxdepth 1 -type f -name '*.zip' -printf '%f\n' | sort)
+          if [ "${#zips[@]}" -ne 1 ]; then
+            echo "::error::Expected exactly one ZIP in repository root, found ${#zips[@]}."
+            exit 1
+          fi
+          zipfile="${zips[0]}"
+          tmp=$(mktemp -d)
+          unzip -q "$zipfile" -d "$tmp"
+          test ! -e "$tmp/.git"
+          rsync -a --delete --exclude='.git/' --exclude='.github/workflows/' --exclude='*.zip' "$tmp"/ ./
+          rm -f ./*.zip
+          rm -rf "$tmp"
+          git add -A
+          if git diff --cached --name-only | grep -q '^\.github/workflows/'; then
+            echo "::error::Safety stop: workflow files would be changed by ZIP import."
+            exit 1
+          fi
+          if git diff --cached --quiet; then exit 0; fi
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git commit -m 'Import ZIP release'
+          git push
