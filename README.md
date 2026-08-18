@@ -1,4 +1,4 @@
-# Spoolman NIIMBOT Labels – Docker v1
+# Spoolman NIIMBOT Labels – Docker v2
 
 Vollständige Fullstack-Version des Spoolman-Label-Dienstes. Enthält Flask-Backend, SQLite, Spoolman-Proxy, Templates, Druckverlauf, Backup/Restore, PWA-Frontend und alle statischen Assets.
 
@@ -56,6 +56,23 @@ Der Proxy akzeptiert keine frei vom Browser angegebene Ziel-URL; damit wird kein
 `/app/data/app.sqlite`, WAL, `synchronous=FULL`, `foreign_keys=ON`. Vor Restore wird ein SQLite-Backup unter `/app/data/backups/` erstellt.
 
 ## Spoolman-Daten und Vorlagen
+### Dynamische Zeilen
+
+Eine Vorlage kann beliebig viele Textzeilen enthalten. Jede Zeile wird erst gegen die aktuellen Spoolman-Daten ausgewertet. Ist das referenzierte Feld leer, entfällt die Zeile vollständig. Schriftgröße und Verteilung werden danach anhand der tatsächlich verbleibenden Zeilen neu berechnet. Das Layout kann automatisch gewählt oder auf „QR links“ bzw. „QR oben“ festgelegt werden.
+
+Beispiel für das breite Spoolman-Layout:
+
+```text
+{{vendor.name}} · {{filament.name}}
+{{filament.material}}
+#{{spool.id}}
+Spool Weight: {{spool.remaining_weight|g}}
+ET: {{filament.settings_extruder_temp}} °C
+BT: {{filament.settings_bed_temp}} °C
+```
+
+Fehlen z. B. Temperaturdaten, werden ET/BT nicht als leere Zeilen gedruckt.
+
 
 Das Frontend nutzt die vollständige verschachtelte Spool-Antwort. Alle `spool.*`, `filament.*`, `vendor.*` und `extra.*`-Felder werden dynamisch als Platzhalter angeboten. Damit bleibt die App kompatibel mit individuellen Extra-Feldern.
 
@@ -65,17 +82,17 @@ Das Docker-Frontend kann normal über Cloudflare Access/OTP geschützt werden. F
 
 ## Pages-Kompatibilität
 
-Docker v1 ↔ Pages v1. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
+Docker v2 ↔ Pages v2. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
 
 ## Backup / Restore
 
-JSON-Format `spoolman-niimbot-backup`, Version 1. Server-Backups enthalten Templates und Verlauf; Spoolman selbst bleibt die führende Quelle für Spool-/Filament-/Vendor-Daten.
+JSON-Format `spoolman-niimbot-backup`, Version 2. Server-Backups enthalten Templates und Verlauf; Spoolman selbst bleibt die führende Quelle für Spool-/Filament-/Vendor-Daten.
 
 ## Bekannte Grenzen
 
 - Hardwaredruck muss auf echtem B1 getestet werden.
 - 40×40, 30×20 und 50×50 sind geometrisch abgeleitet; 50×30 nutzt die bekannte B1-Geometrie 384×240.
-- QR-/NIIMBOT-Browserbibliotheken werden in v1 von UNPKG geladen und anschließend vom Service Worker gecacht.
+- QR-/NIIMBOT-Browserbibliotheken werden in v2 von UNPKG geladen und anschließend vom Service Worker gecacht.
 
 ## Direkte Aufrufe
 

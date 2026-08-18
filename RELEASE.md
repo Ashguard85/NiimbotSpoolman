@@ -1,4 +1,4 @@
-# Release v1
+# Release v2
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -9,3 +9,12 @@
 - Android Web Share Target
 - Local-/Server-Modus
 - Docker-Spoolman-Proxy, SQLite Templates/History, Backup/Restore
+
+## Dynamische Etiketten
+
+- Beliebig viele Textzeilen statt fest drei Zeilen.
+- Leere Spoolman-Felder blenden die betroffene Zeile automatisch aus.
+- Automatische Schriftgröße und vertikale Verteilung anhand der tatsächlich sichtbaren Zeilen.
+- Layoutwahl: Automatisch, QR links oder QR oben.
+- Neue 50×30-Vorlage „Spoolman dynamisch“ im Stil QR links / Daten rechts.
+- Alte v1-Vorlagen und v1-Backups bleiben importierbar.

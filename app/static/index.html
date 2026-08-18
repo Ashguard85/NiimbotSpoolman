@@ -8,14 +8,14 @@
   <meta name="apple-mobile-web-app-title" content="Spool Labels">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; frame-ancestors 'none';">
   <title>Spoolman → NIIMBOT</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=1">
-  <link rel="stylesheet" href="./app.css?v=1">
+  <link rel="manifest" href="./manifest.webmanifest?v=2">
+  <link rel="stylesheet" href="./app.css?v=2">
   <link rel="icon" href="./icons/favicon.png">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">SPOOLMAN → NIIMBOT B1</div><div class="titleline"><h1>Spool Labels</h1><span class="version">v1</span></div></div>
+  <div><div class="eyebrow">SPOOLMAN → NIIMBOT B1</div><div class="titleline"><h1>Spool Labels</h1><span class="version">v2</span></div></div>
   <div class="header-actions"><span id="modeBadge" class="pill">Lokal</span><span id="onlineBadge" class="pill ok">Online</span><button id="settingsOpen" class="icon-btn" type="button">⚙︎</button></div>
 </header>
 
@@ -67,11 +67,10 @@
             </div>
             <label><span>QR-Inhalt</span><select id="qrMode"><option value="url">Spoolman-URL</option><option value="scheme">web+spoolman:s-ID</option><option value="id">Nur ID</option><option value="template">Eigene Vorlage</option></select></label>
             <label id="qrTemplateWrap" class="hidden"><span>QR-Vorlage</span><input id="qrTemplate" type="text" value="{{spool.url}}"></label>
-            <label><span>Zeile 1</span><input id="line1" type="text"></label>
-            <label><span>Zeile 2</span><input id="line2" type="text"></label>
-            <label><span>Zeile 3</span><input id="line3" type="text"></label>
+            <div class="twocol"><label><span>Layout</span><select id="layoutMode"><option value="auto">Automatisch</option><option value="side">QR links</option><option value="stack">QR oben</option></select></label><label><span>Aktiv</span><output id="lineCount" class="linecount">0 Zeilen</output></label></div>
+            <label><span>Textzeilen · eine Vorlage pro Zeile</span><textarea id="textTemplate" rows="7" placeholder="{{vendor.name}} · {{filament.name}}&#10;{{filament.material}}&#10;#{{spool.id}}&#10;Spool Weight: {{spool.remaining_weight|g}}"></textarea><small class="fieldhint">Zeilen, deren Spoolman-Felder leer sind, werden automatisch ausgelassen. Schriftgröße und vertikale Verteilung passen sich an die tatsächlich sichtbaren Zeilen an.</small></label>
             <div class="twocol"><label><span>Dichte</span><input id="density" type="range" min="1" max="5" value="3"><output id="densityOut">3</output></label><label><span>Kopien</span><input id="copies" type="number" min="1" max="20" value="1"></label></div>
-            <details class="fieldsbox"><summary>Alle verfügbaren Spoolman-Daten</summary><p>Ein Feld antippen, um den Platzhalter in die Zwischenablage zu kopieren.</p><div id="fieldBrowser" class="fieldbrowser"></div></details>
+            <details class="fieldsbox"><summary>Alle verfügbaren Spoolman-Daten</summary><p>Ein Feld antippen, um es als neue dynamische Textzeile einzufügen.</p><div id="fieldBrowser" class="fieldbrowser"></div></details>
             <div class="templaterow"><input id="templateName" type="text" placeholder="Vorlagenname"><button id="saveTemplateBtn" class="btn ghost" type="button">Vorlage speichern</button></div>
           </div>
         </div>
@@ -101,8 +100,8 @@
 <div id="toast" class="toast"></div>
 <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js" defer></script>
 <script src="https://unpkg.com/niimbot-web-bluetooth@2.4.0/src/niimbot.js" defer></script>
-<script src="./config.js?v=1" defer></script>
-<script src="./storage.js?v=1" defer></script>
-<script src="./printer.js?v=1" defer></script>
-<script src="./app.js?v=1" defer></script>
+<script src="./config.js?v=2" defer></script>
+<script src="./storage.js?v=2" defer></script>
+<script src="./printer.js?v=2" defer></script>
+<script src="./app.js?v=2" defer></script>
 </body></html>
