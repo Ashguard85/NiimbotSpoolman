@@ -1,0 +1,108 @@
+<!doctype html>
+<html lang="de">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+  <meta name="theme-color" content="#f7f9fc">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-title" content="Spool Labels">
+  <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; frame-ancestors 'none';">
+  <title>Spoolman → NIIMBOT</title>
+  <link rel="manifest" href="./manifest.webmanifest?v=1">
+  <link rel="stylesheet" href="./app.css?v=1">
+  <link rel="icon" href="./icons/favicon.png">
+  <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
+</head>
+<body>
+<header class="topbar">
+  <div><div class="eyebrow">SPOOLMAN → NIIMBOT B1</div><div class="titleline"><h1>Spool Labels</h1><span class="version">v1</span></div></div>
+  <div class="header-actions"><span id="modeBadge" class="pill">Lokal</span><span id="onlineBadge" class="pill ok">Online</span><button id="settingsOpen" class="icon-btn" type="button">⚙︎</button></div>
+</header>
+
+<main class="shell">
+  <section class="toolbar card">
+    <div class="searchrow">
+      <label class="searchbox"><span>Suche</span><input id="searchInput" type="search" placeholder="Spool-ID, Material, Hersteller, Farbe, Ort …"></label>
+      <label><span>Material</span><select id="materialFilter"><option value="">Alle</option></select></label>
+      <label><span>Hersteller</span><select id="vendorFilter"><option value="">Alle</option></select></label>
+      <label><span>Ort</span><select id="locationFilter"><option value="">Alle</option></select></label>
+      <button id="refreshBtn" class="btn secondary" type="button">Aktualisieren</button>
+    </div>
+    <div class="quickrow">
+      <label class="grow"><span>Spool-ID / Spoolman-QR / Spoolman-Link</span><input id="jumpInput" type="text" placeholder="123 · web+spoolman:s-123 · https://…/spool/show/123"></label>
+      <button id="jumpBtn" class="btn secondary" type="button">Öffnen</button>
+      <button id="connectBtn" class="btn secondary" type="button"><span id="printerDot" class="dot"></span><span id="connectText">B1 verbinden</span></button>
+    </div>
+  </section>
+
+  <section class="workspace">
+    <aside class="card listpanel">
+      <div class="panelhead"><div><h2>Spools</h2><p id="spoolCount">Noch nicht geladen</p></div><button id="clearFiltersBtn" class="linkbtn" type="button">Filter löschen</button></div>
+      <div id="spoolList" class="spool-list"><div class="empty">Spoolman verbinden und Spools laden.</div></div>
+    </aside>
+
+    <section class="card detailpanel">
+      <div id="emptyDetail" class="detail-empty"><strong>Spool auswählen</strong><span>Dann kannst du das Label direkt drucken.</span></div>
+      <div id="detailContent" class="hidden">
+        <div class="detailhead">
+          <div><div id="detailKicker" class="eyebrow">SPOOL #–</div><h2 id="detailTitle">–</h2><p id="detailSubtitle">–</p></div>
+          <div class="detailbuttons"><button id="openSpoolmanBtn" class="btn ghost" type="button">In Spoolman öffnen</button><button id="quickPrintBtn" class="btn primary" type="button">Schnelldruck</button></div>
+        </div>
+
+        <div class="label-workspace">
+          <div class="previewcolumn">
+            <div class="previewhead"><strong>Vorschau</strong><span id="geometryBadge" class="smallbadge">40 × 40 mm</span></div>
+            <div id="previewStage" class="previewstage"><canvas id="labelCanvas" width="320" height="320"></canvas></div>
+            <div class="previewmeta"><span id="renderInfo">bereit</span><span id="pixelInfo">320 × 320 px</span></div>
+            <div class="printrow"><button id="printBtn" class="btn primary wide" type="button" disabled>Drucken</button><button id="sharePngBtn" class="btn ghost" type="button">PNG teilen</button></div>
+          </div>
+
+          <div class="editorcolumn">
+            <label><span>Vorlage</span><select id="templateSelect"></select></label>
+            <div class="formatcards" id="formatCards">
+              <button type="button" class="formatcard active" data-format="40x40"><strong>40×40</strong><small>Standard</small></button>
+              <button type="button" class="formatcard" data-format="50x30"><strong>50×30</strong><small>Breit</small></button>
+              <button type="button" class="formatcard" data-format="30x20"><strong>30×20</strong><small>Mini</small></button>
+              <button type="button" class="formatcard" data-format="50x50"><strong>50×50</strong><small>Detail</small></button>
+            </div>
+            <label><span>QR-Inhalt</span><select id="qrMode"><option value="url">Spoolman-URL</option><option value="scheme">web+spoolman:s-ID</option><option value="id">Nur ID</option><option value="template">Eigene Vorlage</option></select></label>
+            <label id="qrTemplateWrap" class="hidden"><span>QR-Vorlage</span><input id="qrTemplate" type="text" value="{{spool.url}}"></label>
+            <label><span>Zeile 1</span><input id="line1" type="text"></label>
+            <label><span>Zeile 2</span><input id="line2" type="text"></label>
+            <label><span>Zeile 3</span><input id="line3" type="text"></label>
+            <div class="twocol"><label><span>Dichte</span><input id="density" type="range" min="1" max="5" value="3"><output id="densityOut">3</output></label><label><span>Kopien</span><input id="copies" type="number" min="1" max="20" value="1"></label></div>
+            <details class="fieldsbox"><summary>Alle verfügbaren Spoolman-Daten</summary><p>Ein Feld antippen, um den Platzhalter in die Zwischenablage zu kopieren.</p><div id="fieldBrowser" class="fieldbrowser"></div></details>
+            <div class="templaterow"><input id="templateName" type="text" placeholder="Vorlagenname"><button id="saveTemplateBtn" class="btn ghost" type="button">Vorlage speichern</button></div>
+          </div>
+        </div>
+
+        <details class="rawbox"><summary>Spoolman-Rohdaten</summary><pre id="rawJson"></pre></details>
+      </div>
+    </section>
+  </section>
+
+  <section class="card historycard"><div class="panelhead"><div><h2>Druckverlauf</h2><p>Letzte lokale/Server-Drucke</p></div><button id="clearHistoryBtn" class="linkbtn" type="button">Leeren</button></div><div id="historyList" class="historylist"><div class="empty">Noch keine Drucke.</div></div></section>
+</main>
+
+<dialog id="settingsDialog">
+  <form method="dialog" class="dialogcard">
+    <div class="dialoghead"><div><div class="eyebrow">SETUP</div><h2>Verbindungen & Daten</h2></div><button value="cancel" class="icon-btn">×</button></div>
+    <div class="settingsgrid">
+      <section><h3>Betriebsmodus</h3><label class="radio"><input type="radio" name="mode" value="local" checked> Lokal – Browser spricht direkt mit Spoolman</label><label class="radio"><input type="radio" name="mode" value="server"> Server – Docker-Backend als Spoolman-Proxy</label></section>
+      <section><h3>Spoolman</h3><label><span>Spoolman URL</span><input id="spoolmanUrl" type="url" placeholder="https://spoolman.meineURL.com"></label><label><span>Öffentliche Spoolman URL für QR</span><input id="spoolmanPublicUrl" type="url" placeholder="https://spoolman.meineURL.com"></label><button id="testSpoolmanBtn" type="button" class="btn secondary">Verbindung testen</button><p class="note">Im lokalen Modus muss Spoolman CORS für diese PWA-Origin erlauben. Im Server-Modus spricht nur dein Docker-Backend mit Spoolman.</p></section>
+      <section id="serverSection"><h3>Label-Backend</h3><label><span>Backend URL</span><input id="backendUrl" type="url" placeholder="https://labels.meineURL.com"></label><label><span>Cloudflare Client ID</span><input id="cfId" type="text"></label><label><span>Cloudflare Client Secret</span><input id="cfSecret" type="password"></label></section>
+      <section><h3>Schnelldruck</h3><label class="radio"><input id="autoQuickPrint" type="checkbox"> Nach Auswahl über Share-Target direkt Vorlage öffnen</label><label><span>Standardformat</span><select id="defaultFormat"><option value="40x40">40×40</option><option value="50x30">50×30</option><option value="30x20">30×20</option><option value="50x50">50×50</option></select></label></section>
+      <section><h3>Daten</h3><div class="buttonstack"><button id="exportBtn" type="button" class="btn ghost">Backup exportieren</button><label class="btn ghost filelabel">Backup importieren<input id="importFile" type="file" accept="application/json,.json"></label><button id="resetLocalBtn" type="button" class="btn danger">Lokale Einstellungen löschen</button></div></section>
+    </div>
+    <div class="dialogfooter"><button id="saveSettingsBtn" value="default" class="btn primary">Speichern</button></div>
+  </form>
+</dialog>
+
+<div id="toast" class="toast"></div>
+<script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js" defer></script>
+<script src="https://unpkg.com/niimbot-web-bluetooth@2.4.0/src/niimbot.js" defer></script>
+<script src="./config.js?v=1" defer></script>
+<script src="./storage.js?v=1" defer></script>
+<script src="./printer.js?v=1" defer></script>
+<script src="./app.js?v=1" defer></script>
+</body></html>

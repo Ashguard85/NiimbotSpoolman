@@ -1,0 +1,11 @@
+# Release v1
+- Eigenständiger Spoolman→NIIMBOT-Dienst
+- Android-/Tablet-first UI
+- dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
+- Vorlagen mit Platzhaltern und Feldbrowser
+- Formate 40×40, 50×30, 30×20, 50×50
+- direkte B1-Ausgabe über Web Bluetooth
+- Spoolman-URL, web+spoolman-Code oder Spool-ID als QR
+- Android Web Share Target
+- Local-/Server-Modus
+- Docker-Spoolman-Proxy, SQLite Templates/History, Backup/Restore
