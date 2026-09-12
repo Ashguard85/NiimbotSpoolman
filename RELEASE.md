@@ -1,4 +1,4 @@
-# Release v7
+# Release v8
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -33,3 +33,6 @@
 - Renderstatus zeigt jetzt QR-Feld- und tatsächliche Code-Pixelgröße.
 
 - Textgröße pro Vorlage: Automatisch oder benutzerdefinierte Maximalgröße 8–30 px; bei Platzmangel wird sicher verkleinert.
+
+- Textblock kann normal, 90° im Uhrzeigersinn oder 90° gegen Uhrzeigersinn gerendert werden.
+- Optionaler automatischer Wortumbruch; manuelle Zeilenumbrüche bleiben erhalten.
