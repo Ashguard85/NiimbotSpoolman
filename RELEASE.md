@@ -1,4 +1,4 @@
-# Release v6
+# Release v7
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -31,3 +31,5 @@
 - QR-ECC L/M/Q/H konfigurierbar; dynamische 50×30-Vorlage nutzt standardmäßig ECC L + 1 Modul Rand für größere Druckmodule.
 - Optionaler QuickChart-QR-Renderer mit automatischem lokalem Fallback.
 - Renderstatus zeigt jetzt QR-Feld- und tatsächliche Code-Pixelgröße.
+
+- Textgröße pro Vorlage: Automatisch oder benutzerdefinierte Maximalgröße 8–30 px; bei Platzmangel wird sicher verkleinert.
