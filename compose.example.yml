@@ -1,0 +1,20 @@
+services:
+  spoolman-niimbot:
+    build:
+      context: https://github.com/USER/spoolman-niimbot.git#main
+    container_name: spoolman-niimbot
+    ports:
+      - "8090:8080"
+    volumes:
+      - /home/USER/docker/spoolman-niimbot/data:/app/data
+    environment:
+      - APP_URL=https://labels.meineURL.com
+      - SPOOLMAN_URL=http://spoolman:8000
+      - SPOOLMAN_PUBLIC_URL=https://spoolman.meineURL.com
+      - PWA_ALLOWED_ORIGIN=https://USER.github.io
+      - BACKUP_KEEP=50
+      - SPOOLMAN_TIMEOUT=8
+      # Optional, falls Spoolman selbst hinter Cloudflare Access liegt:
+      # - SPOOLMAN_CF_CLIENT_ID=${SPOOLMAN_CF_CLIENT_ID}
+      # - SPOOLMAN_CF_CLIENT_SECRET=${SPOOLMAN_CF_CLIENT_SECRET}
+    restart: unless-stopped

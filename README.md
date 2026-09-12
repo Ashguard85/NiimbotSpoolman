@@ -1,99 +1,102 @@
-# Spoolman NIIMBOT Labels – Pages v8
+# Spoolman NIIMBOT Labels – Docker v8
 
-Statische, Android-/Tablet-first PWA zum direkten Drucken von Spoolman-Spooldaten auf einem NIIMBOT B1. Kein PDF-Zwischenschritt: Spoolman-Daten → Canvas → Web Bluetooth → B1.
+Vollständige Fullstack-Version des Spoolman-Label-Dienstes. Enthält Flask-Backend, SQLite, Spoolman-Proxy, Templates, Druckverlauf, Backup/Restore, PWA-Frontend und alle statischen Assets.
 
-## Architektur
+## Ziel
 
-- Gemeinsames Frontend mit Docker v8.
-- Pages enthält kein Python, SQLite oder Server-Secrets.
-- Lokaler Modus: Browser spricht per HTTPS/CORS direkt mit Spoolman.
-- Server-Modus: Browser spricht mit dem Docker-Backend; dieses proxyt ausschließlich zur fest konfigurierten Spoolman-Instanz.
-- Druck läuft immer direkt vom Endgerät über Web Bluetooth zum B1.
-- Primärziel: Lenovo/Android 14 + Chrome. iPhone/Bluefy bleibt als experimenteller BLE-Weg möglich.
+Spoolman auswählen → Label rendern → direkt aus Android/Chrome per Web Bluetooth auf NIIMBOT B1 drucken. Kein PDF-Export aus Spoolman und kein Import in die NIIMBOT-App.
 
-## Spoolman-Daten
+## Docker / Portainer
 
-Die App ist absichtlich schemaflexibel. Sie flacht die komplette Antwort eines Spools ab:
+Die App läuft in `/app`; persistente Daten liegen ausschließlich in `/app/data`.
 
-- `spool.*` – alle Spool-Felder
-- `filament.*` – alle Felder des verschachtelten Filaments
-- `vendor.*` – alle Felder des verschachtelten Vendors
-- `*.extra.*` – sämtliche benutzerdefinierten Extra-Felder werden automatisch sichtbar
-- abgeleitet: `spool.url`, `spool.scheme`, `spool.remaining_percent`
-
-Dadurch können neue oder eigene Spoolman-Felder ohne Codeänderung in Vorlagen verwendet werden.
-
-Beispiele:
-
-```text
-{{spool.id}}
-{{spool.location}}
-{{spool.remaining_weight|g}}
-{{spool.remaining_percent|pct}}
-{{filament.material}}
-{{filament.name}}
-{{filament.color_hex}}
-{{vendor.name}}
-{{spool.extra.meinfeld}}
+```yaml
+services:
+  spoolman-niimbot:
+    build:
+      context: https://github.com/USER/spoolman-niimbot.git#main
+    ports:
+      - "8090:8080"
+    volumes:
+      - /home/USER/docker/spoolman-niimbot/data:/app/data
+    environment:
+      - APP_URL=https://labels.meineURL.com
+      - SPOOLMAN_URL=http://spoolman:8000
+      - SPOOLMAN_PUBLIC_URL=https://spoolman.meineURL.com
+      - PWA_ALLOWED_ORIGIN=https://USER.github.io
+      - BACKUP_KEEP=50
+    restart: unless-stopped
 ```
 
-Filter: `|g`, `|kg`, `|pct`, `|date`.
+## Environment
 
-## Label-Formate
+- `APP_URL`: öffentliche Label-App-URL
+- `SPOOLMAN_URL`: vom Container erreichbare Spoolman-Basis-URL; darf intern/LAN sein
+- `SPOOLMAN_PUBLIC_URL`: URL, die in QR-Codes landen soll
+- `PWA_ALLOWED_ORIGIN`: exakt erlaubte externe Pages-Origin
+- `BACKUP_KEEP`: Anzahl SQLite-Sicherungen
+- `SPOOLMAN_TIMEOUT`: Proxy-Timeout in Sekunden
+- `SPOOLMAN_CF_CLIENT_ID` / `SPOOLMAN_CF_CLIENT_SECRET`: optionaler serverseitiger Cloudflare-Service-Token, falls Spoolman selbst hinter Access liegt; wird nie ans Frontend ausgegeben
 
-v8 enthält 40×40 mm (Standard), 50×30 mm, 30×20 mm und 50×50 mm. Die 50-mm-Breite wird beim B1 auf 384 Druckpixel begrenzt. Nicht jede Rolle/Gap-Geometrie ist hardwarekalibriert; Offset-/Formatfeintuning sollte mit der echten Rolle geprüft werden.
+## API
 
-## QR-Inhalte
+- `GET /health`
+- `GET /api/config`
+- `GET /api/spoolman/<path>` – GET-only Proxy zur fest konfigurierten Spoolman-API
+- `GET|POST /api/templates`
+- `DELETE /api/templates/<id>`
+- `GET|POST|DELETE /api/history`
+- `GET /api/export`
+- `POST /api/import`
 
-- Öffentliche Spoolman-URL `/spool/show/<id>`
-- `web+spoolman:s-<id>`
-- nur Spool-ID
-- eigene Template-Zeichenfolge
+Der Proxy akzeptiert keine frei vom Browser angegebene Ziel-URL; damit wird kein generischer SSRF-Proxy bereitgestellt.
 
-## Lenovo / Android 14
+## SQLite
 
-1. Seite in Chrome öffnen.
-2. Optional als PWA installieren.
-3. In Setup Spoolman-Modus konfigurieren.
-4. `B1 verbinden` drücken und Drucker wählen.
-5. Spool auswählen und `Drucken` oder `Schnelldruck` nutzen.
+`/app/data/app.sqlite`, WAL, `synchronous=FULL`, `foreign_keys=ON`. Vor Restore wird ein SQLite-Backup unter `/app/data/backups/` erstellt.
 
-Das Manifest enthält ein Web Share Target. Wenn die PWA installiert ist, kann eine geteilte Spoolman-URL an die Label-App übergeben werden; die App erkennt `/spool/show/<id>` sowie `web+spoolman:s-<id>`.
+## Spoolman-Daten und Vorlagen
+### Dynamische Zeilen
 
-## Lokaler Modus
+Eine Vorlage kann beliebig viele Textzeilen enthalten. Jede Zeile wird erst gegen die aktuellen Spoolman-Daten ausgewertet. Ist das referenzierte Feld leer, entfällt die Zeile vollständig. Schriftgröße und Verteilung werden danach anhand der tatsächlich verbleibenden Zeilen neu berechnet. Das Layout kann automatisch gewählt oder auf „QR links“ bzw. „QR oben“ festgelegt werden.
 
-Direkter API-Aufruf zu `https://spoolman.example/.../api/v8`. Spoolman muss HTTPS und CORS für die Pages-Origin erlauben. Eine HTTPS-PWA kann keine unsichere `http://`-Spoolman-Instanz als Mixed Content abrufen.
+Beispiel für das breite Spoolman-Layout:
 
-## Server-Modus
+```text
+{{vendor.name}} · {{filament.name}}
+{{filament.material}}
+#{{spool.id}}
+Spool Weight: {{spool.remaining_weight|g}}
+ET: {{filament.settings_extruder_temp}} °C
+BT: {{filament.settings_bed_temp}} °C
+```
 
-Pages → HTTPS Docker-Backend → konfigurierte Spoolman-Instanz. Damit kann Spoolman intern im LAN bleiben und muss kein CORS für GitHub Pages liefern. Cloudflare Access Service Token kann im Pages-Setup lokal gespeichert werden; Tokens landen nicht in Backup-Exports.
+Fehlen z. B. Temperaturdaten, werden ET/BT nicht als leere Zeilen gedruckt.
 
-## Offline
 
-App-Shell und geladene CDN-Bibliotheken werden vom Service Worker gecacht. In v8 werden aktuelle Spoolman-Inventardaten nicht als echte Offline-Synchronisation geführt; ohne Spoolman-Verbindung sind daher keine veralteten Daten als aktuell dargestellt.
+Das Frontend nutzt die vollständige verschachtelte Spool-Antwort. Alle `spool.*`, `filament.*`, `vendor.*` und `extra.*`-Felder werden dynamisch als Platzhalter angeboten. Damit bleibt die App kompatibel mit individuellen Extra-Feldern.
 
-## Backup
+## Cloudflare
 
-Lokaler Modus: JSON-Backup mit Format `spoolman-niimbot-backup`, Version 2. Enthält lokale Vorlagen, Verlauf und nicht geheime Einstellungen. Cloudflare Client Secret wird nicht exportiert.
+Das Docker-Frontend kann normal über Cloudflare Access/OTP geschützt werden. Für die externe Pages-PWA kann ein eigener Service Token verwendet werden. `PWA_ALLOWED_ORIGIN` schränkt CORS ein; `CF-Access-Client-Id` und `CF-Access-Client-Secret` sind als Preflight-Headers zugelassen.
 
-## GitHub Pages
+## Pages-Kompatibilität
 
-Einmalig `Settings → Pages → Build and deployment → Source: GitHub Actions` setzen. Danach deployt der Workflow automatisch. Der ZIP-Importer schützt den kompletten Ordner `.github/workflows/`.
+Docker v8 ↔ Pages v8. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
 
-## Update-Lifecycle
+## Backup / Restore
 
-Service-Worker-Cache: `spoolman-niimbot-v8`. Neue Releases erhöhen die Cache-Version. Es gibt keine automatische `controllerchange → location.reload()`-Schleife.
+JSON-Format `spoolman-niimbot-backup`, Version 2. Server-Backups enthalten Templates und Verlauf; Spoolman selbst bleibt die führende Quelle für Spool-/Filament-/Vendor-Daten.
 
-## Bekannte Grenzen v8
+## Bekannte Grenzen
 
-- Reale B1-Label-/Gap-Kalibrierung muss mit deiner Rolle getestet werden.
-- BLE-Druck kann in dieser Umgebung nicht mit echter Hardware getestet werden.
-- Die QR- und NIIMBOT-JavaScript-Bibliotheken werden beim ersten Online-Start über UNPKG geladen und danach gecacht; für eine spätere Produktionsversion sollten sie vendort werden.
-- Share Target ist für Android/Chromium gedacht; Browser-/OS-Unterstützung kann variieren.
+- Hardwaredruck muss auf echtem B1 getestet werden.
+- 40×40, 30×20 und 50×50 sind geometrisch abgeleitet; 50×30 nutzt die bekannte B1-Geometrie 384×240.
+- QR-/NIIMBOT-Browserbibliotheken werden in v8 von UNPKG geladen und anschließend vom Service Worker gecacht.
 
 ## Direkte Aufrufe
 
-Siehe `SHORTCUTS.md`. Besonders für Android ist `#spool=<id>` und das installierte Web Share Target vorgesehen.
+`/#spool=<id>` öffnet eine Rolle direkt. Die installierte Android-PWA kann außerdem als Share Target eine Spoolman-URL aus Chrome übernehmen.
 
 ## QR-Druckqualität
 
