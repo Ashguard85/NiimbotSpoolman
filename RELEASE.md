@@ -1,4 +1,4 @@
-# Release v8
+# Release v9
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -36,3 +36,8 @@
 
 - Textblock kann normal, 90° im Uhrzeigersinn oder 90° gegen Uhrzeigersinn gerendert werden.
 - Optionaler automatischer Wortumbruch; manuelle Zeilenumbrüche bleiben erhalten.
+
+- Druckfix: Canvas wird direkt an den NIIMBOT-Rasterpfad übergeben; kein `data:`-/Blob-Bildladen mehr vor dem BLE-Druck.
+- B1-Transport wird konservativ auf paced + BUNDLE_MAX 180 gesetzt, sofern vom Treiber unterstützt.
+- Eigene Vorlagen können jetzt über „Vorlage löschen“ entfernt werden; Standardvorlagen bleiben geschützt.
+- Service-Worker-App-Shell auf v9-Assets korrigiert.

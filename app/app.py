@@ -3,7 +3,7 @@ from pathlib import Path
 from datetime import datetime, timezone
 from flask import Flask, jsonify, request, send_from_directory, Response
 
-APP_VERSION="8"
+APP_VERSION="9"
 DATA=Path('/app/data')
 DB=DATA/'app.sqlite'
 BACKUPS=DATA/'backups'
