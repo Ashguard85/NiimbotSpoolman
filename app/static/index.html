@@ -8,45 +8,58 @@
   <meta name="apple-mobile-web-app-title" content="Spool Labels">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; frame-ancestors 'none';">
   <title>Spoolman → NIIMBOT</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=9">
-  <link rel="stylesheet" href="./app.css?v=9">
+  <link rel="manifest" href="./manifest.webmanifest?v=11">
+  <link rel="stylesheet" href="./app.css?v=11">
   <link rel="icon" href="./icons/favicon.png">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 </head>
 <body>
 <header class="topbar">
-  <div><div class="eyebrow">SPOOLMAN → NIIMBOT B1</div><div class="titleline"><h1>Spool Labels</h1><span class="version">v9</span></div></div>
-  <div class="header-actions"><span id="modeBadge" class="pill">Lokal</span><span id="onlineBadge" class="pill ok">Online</span><button id="settingsOpen" class="icon-btn" type="button">⚙︎</button></div>
+  <div>
+    <div class="eyebrow">SPOOLMAN → NIIMBOT B1</div>
+    <div class="titleline"><h1>Spool Labels</h1><span class="version">v11</span></div>
+  </div>
+  <div class="header-actions">
+    <span id="modeBadge" class="pill">Lokal</span>
+    <span id="onlineBadge" class="pill ok">Online</span>
+    <button id="settingsOpen" class="icon-btn" type="button" aria-label="Einstellungen">⚙︎</button>
+  </div>
 </header>
 
 <main class="shell">
-  <section class="toolbar card">
-    <div class="searchrow">
-      <label class="searchbox"><span>Suche</span><input id="searchInput" type="search" placeholder="Spool-ID, Material, Hersteller, Farbe, Ort …"></label>
-      <label><span>Material</span><select id="materialFilter"><option value="">Alle</option></select></label>
-      <label><span>Hersteller</span><select id="vendorFilter"><option value="">Alle</option></select></label>
-      <label><span>Ort</span><select id="locationFilter"><option value="">Alle</option></select></label>
-      <button id="refreshBtn" class="btn secondary" type="button">Aktualisieren</button>
+  <section class="toolbar card compact-toolbar">
+    <div class="pickrow">
+      <label class="searchbox"><span>Spool suchen</span><input id="searchInput" type="search" placeholder="ID, Material, Hersteller, Farbe, Ort …"></label>
+      <button id="connectBtn" class="btn secondary connect-main" type="button"><span id="printerDot" class="dot"></span><span id="connectText">B1 verbinden</span></button>
+      <button id="refreshBtn" class="btn ghost" type="button">↻</button>
     </div>
-    <div class="quickrow">
-      <label class="grow"><span>Spool-ID / Spoolman-QR / Spoolman-Link</span><input id="jumpInput" type="text" placeholder="123 · web+spoolman:s-123 · https://…/spool/show/123"></label>
+    <div class="jumpcompact">
+      <label class="grow"><span>Spool-ID / QR / Link</span><input id="jumpInput" type="text" inputmode="url" placeholder="123 · web+spoolman:s-123 · https://…/spool/show/123"></label>
       <button id="jumpBtn" class="btn secondary" type="button">Öffnen</button>
-      <button id="connectBtn" class="btn secondary" type="button"><span id="printerDot" class="dot"></span><span id="connectText">B1 verbinden</span></button>
     </div>
+    <details class="filterdetails">
+      <summary>Filter</summary>
+      <div class="filtergrid">
+        <label><span>Material</span><select id="materialFilter"><option value="">Alle</option></select></label>
+        <label><span>Hersteller</span><select id="vendorFilter"><option value="">Alle</option></select></label>
+        <label><span>Ort</span><select id="locationFilter"><option value="">Alle</option></select></label>
+        <button id="clearFiltersBtn" class="btn ghost" type="button">Filter löschen</button>
+      </div>
+    </details>
   </section>
 
   <section class="workspace">
     <aside class="card listpanel">
-      <div class="panelhead"><div><h2>Spools</h2><p id="spoolCount">Noch nicht geladen</p></div><button id="clearFiltersBtn" class="linkbtn" type="button">Filter löschen</button></div>
+      <div class="panelhead"><div><h2>Spools</h2><p id="spoolCount">Noch nicht geladen</p></div></div>
       <div id="spoolList" class="spool-list"><div class="empty">Spoolman verbinden und Spools laden.</div></div>
     </aside>
 
     <section class="card detailpanel">
-      <div id="emptyDetail" class="detail-empty"><strong>Spool auswählen</strong><span>Dann kannst du das Label direkt drucken.</span></div>
+      <div id="emptyDetail" class="detail-empty"><strong>Spool auswählen</strong><span>Danach ist das Label mit einem Tippen druckbereit.</span></div>
       <div id="detailContent" class="hidden">
         <div class="detailhead">
           <div><div id="detailKicker" class="eyebrow">SPOOL #–</div><h2 id="detailTitle">–</h2><p id="detailSubtitle">–</p></div>
-          <div class="detailbuttons"><button id="openSpoolmanBtn" class="btn ghost" type="button">In Spoolman öffnen</button><button id="quickPrintBtn" class="btn primary" type="button">Schnelldruck</button></div>
+          <div class="detailbuttons"><button id="openSpoolmanBtn" class="btn ghost" type="button">In Spoolman</button><button id="quickPrintBtn" class="btn primary" type="button">Schnelldruck</button></div>
         </div>
 
         <div class="label-workspace">
@@ -57,38 +70,86 @@
             <div class="printrow"><button id="printBtn" class="btn primary wide" type="button" disabled>Drucken</button><button id="sharePngBtn" class="btn ghost" type="button">PNG teilen</button></div>
           </div>
 
-          <div class="editorcolumn">
-            <label><span>Vorlage</span><select id="templateSelect"></select></label>
-            <div class="formatcards" id="formatCards">
-              <button type="button" class="formatcard active" data-format="40x40"><strong>40×40</strong><small>Standard</small></button>
-              <button type="button" class="formatcard" data-format="50x30"><strong>50×30</strong><small>Breit</small></button>
-              <button type="button" class="formatcard" data-format="30x20"><strong>30×20</strong><small>Mini</small></button>
-              <button type="button" class="formatcard" data-format="50x50"><strong>50×50</strong><small>Detail</small></button>
-            </div>
-            <label><span>QR-Inhalt</span><select id="qrMode"><option value="url">Spoolman-URL</option><option value="scheme">web+spoolman:s-ID</option><option value="id">Nur ID</option><option value="template">Eigene Vorlage</option></select></label>
-            <label id="qrTemplateWrap" class="hidden"><span>QR-Vorlage</span><input id="qrTemplate" type="text" value="{{spool.url}}"></label>
-            <div class="twocol"><label><span>Layout</span><select id="layoutMode"><option value="auto">Automatisch</option><option value="side">QR links</option><option value="stack">QR oben</option></select></label><label><span>Aktiv</span><output id="lineCount" class="linecount">0 Zeilen</output></label></div><label><span>QR-Größe</span><select id="qrScale"><option value="balanced">Ausgewogen</option><option value="large">QR groß</option><option value="xlarge">QR sehr groß</option><option value="custom">Benutzerdefiniert</option><option value="auto">Automatisch</option></select><small class="fieldhint">Automatisch passt die QR-Größe abhängig von Zeilenzahl und Format an.</small></label><div class="twocol"><label><span>QR-Feldlimit in %</span><input id="qrWidthPercent" type="range" min="45" max="100" step="1" value="100"><output id="qrWidthPercentOut">100%</output><small class="fieldhint">Bei 50×30 ist das QR-Feld ab etwa 60 % bereits durch die 30-mm-Labelhöhe begrenzt. Für einen wirklich größeren gedruckten Code sind QR-Rand und ECC entscheidend.</small></label><label><span>Text-Ausrichtung</span><select id="textAlignMode"><option value="auto">Automatisch</option><option value="top">Oben</option><option value="middle">Mittig</option><option value="bottom">Unten</option></select></label></div><div class="twocol"><label><span>Textgröße</span><select id="textSizeMode"><option value="auto">Automatisch</option><option value="custom">Benutzerdefiniert</option></select></label><label><span>Textgröße (max.)</span><input id="textFontSize" type="range" min="8" max="30" step="1" value="16"><output id="textFontSizeOut">16 px</output><small class="fieldhint">Bei zu vielen oder zu langen Zeilen wird automatisch kleiner skaliert, damit nichts aus dem Etikett läuft.</small></label></div><div class="twocol"><label><span>Textumbruch</span><select id="textWrapMode"><option value="wrap">Automatisch umbrechen</option><option value="nowrap">Nicht umbrechen</option></select><small class="fieldhint">Manuelle Zeilenumbrüche im Textfeld bleiben immer erhalten.</small></label><label><span>Text drehen</span><select id="textRotation"><option value="0">Normal</option><option value="90">90° im Uhrzeigersinn</option><option value="-90">90° gegen Uhrzeigersinn</option></select></label></div><div class="twocol"><label><span>QR-Renderer</span><select id="qrRenderMode"><option value="local">Lokal · pixelgenau</option><option value="quickchart">QuickChart API</option></select></label><label><span>QR-Rand</span><select id="qrMarginModules"><option value="0">0 Module · maximal</option><option value="1" selected>1 Modul · kompakt</option><option value="2">2 Module</option><option value="4">4 Module · Standard</option></select></label></div><div class="twocol"><label><span>Fehlerkorrektur</span><select id="qrEcLevel"><option value="L">L · größter Code</option><option value="M" selected>M · Standard</option><option value="Q">Q</option><option value="H">H</option></select></label><div><span class="fieldhint">Für kleine Thermolabels: Rand 1 + ECC L ergibt deutlich größere Module. QuickChart bleibt optional.</span></div></div>
-            <label><span>Textzeilen · eine Vorlage pro Zeile</span><textarea id="textTemplate" rows="7" placeholder="{{vendor.name}} · {{filament.name}}&#10;{{filament.material}}&#10;#{{spool.id}}&#10;Spool Weight: {{spool.remaining_weight|g}}"></textarea><small class="fieldhint">Zeilen, deren Spoolman-Felder leer sind, werden automatisch ausgelassen. Schriftgröße und vertikale Verteilung passen sich an die tatsächlich sichtbaren Zeilen an.</small></label>
-            <div class="twocol"><label><span>Dichte</span><input id="density" type="range" min="1" max="5" value="3"><output id="densityOut">3</output></label><label><span>Kopien</span><input id="copies" type="number" min="1" max="20" value="1"></label></div>
-            <details class="fieldsbox"><summary>Alle verfügbaren Spoolman-Daten</summary><p>Ein Feld antippen, um es als neue dynamische Textzeile einzufügen.</p><div id="fieldBrowser" class="fieldbrowser"></div></details>
-            <div class="templaterow"><input id="templateName" type="text" placeholder="Vorlagenname"><button id="saveTemplateBtn" class="btn ghost" type="button">Vorlage speichern</button><button id="deleteTemplateBtn" class="btn danger" type="button">Vorlage löschen</button></div>
+          <div class="editorcolumn simple-editor">
+            <section class="quick-config">
+              <div class="sectionhead"><div><span class="eyebrow">VORLAGE</span><strong>Label wählen</strong></div><span id="quickTemplateFormat" class="smallbadge">–</span></div>
+              <div id="templateTiles" class="template-tiles" aria-label="Vorlagen"></div>
+              <label class="sr-only"><span>Vorlage</span><select id="templateSelect"></select></label>
+            </section>
+
+            <details id="advancedEditor" class="advanced-editor">
+              <summary><span><strong>Label anpassen</strong><small>Format, QR, Text & Druck</small></span><span class="chev">⌄</span></summary>
+              <div class="advanced-body">
+                <section class="controlgroup">
+                  <div class="grouphead"><strong>Inhalt</strong><small>Was auf das Label kommt</small></div>
+                  <label><span>QR-Inhalt</span><select id="qrMode"><option value="url">Spoolman-URL</option><option value="scheme">web+spoolman:s-ID</option><option value="id">Nur ID</option><option value="template">Eigene Vorlage</option></select></label>
+                  <label id="qrTemplateWrap" class="hidden"><span>QR-Vorlage</span><input id="qrTemplate" type="text" value="{{spool.url}}"></label>
+                  <label><span>Textzeilen</span><textarea id="textTemplate" rows="7" placeholder="{{vendor.name}} · {{filament.name}}&#10;{{filament.material}}&#10;#{{spool.id}}&#10;Spool Weight: {{spool.remaining_weight|g}}"></textarea><small class="fieldhint">Leere Felder werden ausgelassen; manuelle Zeilenumbrüche bleiben erhalten.</small></label>
+                  <details class="fieldsbox"><summary>Spoolman-Feld einfügen</summary><p>Ein Feld antippen, um es als neue Zeile einzufügen.</p><div id="fieldBrowser" class="fieldbrowser"></div></details>
+                </section>
+
+                <section class="controlgroup">
+                  <div class="grouphead"><strong>Layout</strong><small>Format und Anordnung</small></div>
+                  <div class="formatcards" id="formatCards">
+                    <button type="button" class="formatcard active" data-format="40x40"><strong>40×40</strong><small>Standard</small></button>
+                    <button type="button" class="formatcard" data-format="50x30"><strong>50×30</strong><small>Breit</small></button>
+                    <button type="button" class="formatcard" data-format="30x20"><strong>30×20</strong><small>Mini</small></button>
+                    <button type="button" class="formatcard" data-format="50x50"><strong>50×50</strong><small>Detail</small></button>
+                  </div>
+                  <div class="twocol equal"><label><span>Layout</span><select id="layoutMode"><option value="auto">Automatisch</option><option value="side">QR links</option><option value="stack">QR oben</option></select></label><label><span>Aktiv</span><output id="lineCount" class="linecount">0 Zeilen</output></label></div>
+                  <div class="twocol equal"><label><span>Text-Ausrichtung</span><select id="textAlignMode"><option value="auto">Automatisch</option><option value="top">Oben</option><option value="middle">Mittig</option><option value="bottom">Unten</option></select></label><label><span>Text drehen</span><select id="textRotation"><option value="0">Normal</option><option value="90">90° ↻</option><option value="-90">90° ↺</option></select></label></div>
+                  <label><span>Text-Rand</span><input id="textPadding" type="range" min="0" max="24" step="1" value="8"><output id="textPaddingOut">8 px</output></label>
+                </section>
+
+                <section class="controlgroup">
+                  <div class="grouphead"><strong>Darstellung</strong><small>Größe und Lesbarkeit</small></div>
+                  <div class="twocol equal"><label><span>QR-Größe</span><select id="qrScale"><option value="balanced">Ausgewogen</option><option value="large">QR groß</option><option value="xlarge">QR sehr groß</option><option value="custom">Benutzerdefiniert</option><option value="auto">Automatisch</option></select></label><label id="qrWidthControl"><span>QR-Feldlimit</span><input id="qrWidthPercent" type="range" min="45" max="100" step="1" value="100"><output id="qrWidthPercentOut">100%</output></label></div>
+                  <div class="twocol equal"><label><span>Textgröße</span><select id="textSizeMode"><option value="auto">Automatisch</option><option value="custom">Benutzerdefiniert</option></select></label><label id="textFontControl"><span>Textgröße max.</span><input id="textFontSize" type="range" min="8" max="30" step="1" value="16"><output id="textFontSizeOut">16 px</output></label></div>
+                  <label><span>Textumbruch</span><select id="textWrapMode"><option value="wrap">Automatisch umbrechen</option><option value="nowrap">Nicht umbrechen</option></select></label>
+                </section>
+
+                <details class="controlgroup subdetails">
+                  <summary><strong>QR erweitert</strong><span>Renderer, Rand, ECC</span></summary>
+                  <div class="subbody">
+                    <div class="twocol equal"><label><span>QR-Renderer</span><select id="qrRenderMode"><option value="local">Lokal · pixelgenau</option><option value="quickchart">QuickChart API</option></select></label><label><span>QR-Rand</span><select id="qrMarginModules"><option value="0">0 Module</option><option value="1" selected>1 Modul</option><option value="2">2 Module</option><option value="4">4 Module</option></select></label></div>
+                    <label><span>Fehlerkorrektur</span><select id="qrEcLevel"><option value="L">L · größte Module</option><option value="M" selected>M · Standard</option><option value="Q">Q</option><option value="H">H</option></select></label>
+                  </div>
+                </details>
+
+                <details class="controlgroup subdetails">
+                  <summary><strong>Druck</strong><span>Dichte & Kopien</span></summary>
+                  <div class="subbody twocol equal"><label><span>Dichte</span><input id="density" type="range" min="1" max="5" value="3"><output id="densityOut">3</output></label><label><span>Kopien</span><input id="copies" type="number" min="1" max="20" value="1"></label></div>
+                </details>
+
+                <section class="controlgroup template-tools">
+                  <div class="grouphead"><strong>Vorlage verwalten</strong><small>Eigene Einstellungen speichern</small></div>
+                  <div class="templaterow"><input id="templateName" type="text" placeholder="Vorlagenname"><button id="saveTemplateBtn" class="btn ghost" type="button">Speichern</button><button id="deleteTemplateBtn" class="btn danger" type="button">Löschen</button></div>
+                </section>
+              </div>
+            </details>
           </div>
         </div>
 
-        <details class="rawbox"><summary>Spoolman-Rohdaten</summary><pre id="rawJson"></pre></details>
+        <details class="rawbox techdetails"><summary>Technische Spoolman-Daten</summary><pre id="rawJson"></pre></details>
       </div>
     </section>
   </section>
 
-  <section class="card historycard"><div class="panelhead"><div><h2>Druckverlauf</h2><p>Letzte lokale/Server-Drucke</p></div><button id="clearHistoryBtn" class="linkbtn" type="button">Leeren</button></div><div id="historyList" class="historylist"><div class="empty">Noch keine Drucke.</div></div></section>
+  <section class="card historycard"><div class="panelhead"><div><h2>Druckverlauf</h2><p>Letzte Drucke</p></div><button id="clearHistoryBtn" class="linkbtn" type="button">Leeren</button></div><div id="historyList" class="historylist"><div class="empty">Noch keine Drucke.</div></div></section>
 </main>
+
+<div id="stickyPrintBar" class="sticky-printbar">
+  <button id="stickyConnectBtn" class="sticky-status" type="button"><span id="stickyPrinterDot" class="dot"></span><span id="stickyPrinterText">B1 verbinden</span></button>
+  <label class="sticky-copies"><span>Kopien</span><input id="stickyCopies" type="number" min="1" max="20" value="1"></label>
+  <button id="stickyPrintBtn" class="btn primary" type="button" disabled>Drucken</button>
+</div>
 
 <dialog id="settingsDialog">
   <form method="dialog" class="dialogcard">
     <div class="dialoghead"><div><div class="eyebrow">SETUP</div><h2>Verbindungen & Daten</h2></div><button value="cancel" class="icon-btn">×</button></div>
     <div class="settingsgrid">
       <section><h3>Betriebsmodus</h3><label class="radio"><input type="radio" name="mode" value="local" checked> Lokal – Browser spricht direkt mit Spoolman</label><label class="radio"><input type="radio" name="mode" value="server"> Server – Docker-Backend als Spoolman-Proxy</label></section>
-      <section><h3>Spoolman</h3><label><span>Spoolman URL</span><input id="spoolmanUrl" type="url" placeholder="https://spoolman.meineURL.com"></label><label><span>Öffentliche Spoolman URL für QR</span><input id="spoolmanPublicUrl" type="url" placeholder="https://spoolman.meineURL.com"></label><button id="testSpoolmanBtn" type="button" class="btn secondary">Verbindung testen</button><p class="note">Im lokalen Modus muss Spoolman CORS für diese PWA-Origin erlauben. Im Server-Modus spricht nur dein Docker-Backend mit Spoolman.</p></section>
+      <section><h3>Spoolman</h3><label><span>Spoolman URL</span><input id="spoolmanUrl" type="url" placeholder="https://spoolman.meineURL.com"></label><label><span>Öffentliche Spoolman URL für QR</span><input id="spoolmanPublicUrl" type="url" placeholder="https://spoolman.meineURL.com"></label><button id="testSpoolmanBtn" type="button" class="btn secondary">Verbindung testen</button><p class="note">Im Server-Modus spricht nur dein Docker-Backend mit Spoolman.</p></section>
       <section id="serverSection"><h3>Label-Backend</h3><label><span>Backend URL</span><input id="backendUrl" type="url" placeholder="https://labels.meineURL.com"></label><label><span>Cloudflare Client ID</span><input id="cfId" type="text"></label><label><span>Cloudflare Client Secret</span><input id="cfSecret" type="password"></label></section>
       <section><h3>Schnelldruck</h3><label class="radio"><input id="autoQuickPrint" type="checkbox"> Nach Auswahl über Share-Target direkt Vorlage öffnen</label><label><span>Standardformat</span><select id="defaultFormat"><option value="40x40">40×40</option><option value="50x30">50×30</option><option value="30x20">30×20</option><option value="50x50">50×50</option></select></label></section>
       <section><h3>Daten</h3><div class="buttonstack"><button id="exportBtn" type="button" class="btn ghost">Backup exportieren</button><label class="btn ghost filelabel">Backup importieren<input id="importFile" type="file" accept="application/json,.json"></label><button id="resetLocalBtn" type="button" class="btn danger">Lokale Einstellungen löschen</button></div></section>
@@ -100,8 +161,8 @@
 <div id="toast" class="toast"></div>
 <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js" defer></script>
 <script src="https://unpkg.com/niimbot-web-bluetooth@2.4.0/src/niimbot.js" defer></script>
-<script src="./config.js?v=9" defer></script>
-<script src="./storage.js?v=9" defer></script>
-<script src="./printer.js?v=9" defer></script>
-<script src="./app.js?v=9" defer></script>
+<script src="./config.js?v=11" defer></script>
+<script src="./storage.js?v=11" defer></script>
+<script src="./printer.js?v=11" defer></script>
+<script src="./app.js?v=11" defer></script>
 </body></html>

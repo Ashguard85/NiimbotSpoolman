@@ -1,4 +1,14 @@
-# Release v9
+
+
+## v11 – vereinfachte Oberfläche
+- Schnellansicht: Spool auswählen → Vorlage wählen → drucken.
+- Vorlagen als antippbare Kacheln.
+- Detailfunktionen unter „Label anpassen“ gruppiert, ohne Funktionen zu entfernen.
+- QR- und Druck-Expertenoptionen in aufklappbaren Bereichen.
+- Feste Druckleiste mit B1-Status, Kopien und Druckbutton.
+- Mobilansicht optimiert; nach Spool-Auswahl springt die Ansicht direkt zum Label.
+- Text- und QR-Regler werden nur gezeigt, wenn sie für den gewählten Modus relevant sind.
+# Release v10
 - Eigenständiger Spoolman→NIIMBOT-Dienst
 - Android-/Tablet-first UI
 - dynamische Nutzung aller Spoolman-Spool-/Filament-/Vendor-/Extra-Felder
@@ -40,4 +50,4 @@
 - Druckfix: Canvas wird direkt an den NIIMBOT-Rasterpfad übergeben; kein `data:`-/Blob-Bildladen mehr vor dem BLE-Druck.
 - B1-Transport wird konservativ auf paced + BUNDLE_MAX 180 gesetzt, sofern vom Treiber unterstützt.
 - Eigene Vorlagen können jetzt über „Vorlage löschen“ entfernt werden; Standardvorlagen bleiben geschützt.
-- Service-Worker-App-Shell auf v9-Assets korrigiert.
+- Service-Worker-App-Shell auf v10-Assets korrigiert.

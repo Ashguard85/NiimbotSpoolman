@@ -1,4 +1,4 @@
-# Spoolman NIIMBOT Labels – Docker v9
+# Spoolman NIIMBOT Labels – Docker v11
 
 Vollständige Fullstack-Version des Spoolman-Label-Dienstes. Enthält Flask-Backend, SQLite, Spoolman-Proxy, Templates, Druckverlauf, Backup/Restore, PWA-Frontend und alle statischen Assets.
 
@@ -82,7 +82,7 @@ Das Docker-Frontend kann normal über Cloudflare Access/OTP geschützt werden. F
 
 ## Pages-Kompatibilität
 
-Docker v9 ↔ Pages v9. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
+Docker v11 ↔ Pages v11. Das Frontend ist bis auf `config.js` identisch: Docker startet standardmäßig im Server-Modus, Pages im lokalen Modus.
 
 ## Backup / Restore
 
@@ -92,7 +92,7 @@ JSON-Format `spoolman-niimbot-backup`, Version 2. Server-Backups enthalten Templ
 
 - Hardwaredruck muss auf echtem B1 getestet werden.
 - 40×40, 30×20 und 50×50 sind geometrisch abgeleitet; 50×30 nutzt die bekannte B1-Geometrie 384×240.
-- QR-/NIIMBOT-Browserbibliotheken werden in v9 von UNPKG geladen und anschließend vom Service Worker gecacht.
+- QR-/NIIMBOT-Browserbibliotheken werden in v11 von UNPKG geladen und anschließend vom Service Worker gecacht.
 
 ## Direkte Aufrufe
 
@@ -100,4 +100,4 @@ JSON-Format `spoolman-niimbot-backup`, Version 2. Server-Backups enthalten Templ
 
 ## QR-Druckqualität
 
-Für 50×30 nutzt die Standardvorlage in v9 einen kompakten QR-Rand von 1 Modul und ECC L. Das vergrößert die tatsächlich gedruckten QR-Module. Optional kann der QR mit der QuickChart API gerendert werden; bei Fehlern fällt die App automatisch auf den lokalen Renderer zurück.
+Für 50×30 nutzt die Standardvorlage in v11 einen kompakten QR-Rand von 1 Modul und ECC L. Das vergrößert die tatsächlich gedruckten QR-Module. Optional kann der QR mit der QuickChart API gerendert werden; bei Fehlern fällt die App automatisch auf den lokalen Renderer zurück.
