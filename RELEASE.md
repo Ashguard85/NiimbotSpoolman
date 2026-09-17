@@ -1,6 +1,6 @@
 
 
-## v11 – vereinfachte Oberfläche
+## v12 – vereinfachte Oberfläche
 - Schnellansicht: Spool auswählen → Vorlage wählen → drucken.
 - Vorlagen als antippbare Kacheln.
 - Detailfunktionen unter „Label anpassen“ gruppiert, ohne Funktionen zu entfernen.
@@ -51,3 +51,6 @@
 - B1-Transport wird konservativ auf paced + BUNDLE_MAX 180 gesetzt, sofern vom Treiber unterstützt.
 - Eigene Vorlagen können jetzt über „Vorlage löschen“ entfernt werden; Standardvorlagen bleiben geschützt.
 - Service-Worker-App-Shell auf v10-Assets korrigiert.
+
+- iPhone-Layout korrigiert: keine feste Tablet-Mindestbreite/kein großer horizontaler Leerraum mehr.
+- Ausgewählte Vorlage kann als Standard festgelegt werden; sie wird beim nächsten Start automatisch geladen.

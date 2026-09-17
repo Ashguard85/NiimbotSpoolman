@@ -8,8 +8,8 @@
   <meta name="apple-mobile-web-app-title" content="Spool Labels">
   <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self' https://unpkg.com; style-src 'self'; img-src 'self' data: blob:; connect-src 'self' https:; font-src 'self'; object-src 'none'; base-uri 'self'; form-action 'self'; worker-src 'self' blob:; frame-ancestors 'none';">
   <title>Spoolman → NIIMBOT</title>
-  <link rel="manifest" href="./manifest.webmanifest?v=11">
-  <link rel="stylesheet" href="./app.css?v=11">
+  <link rel="manifest" href="./manifest.webmanifest?v=12">
+  <link rel="stylesheet" href="./app.css?v=12">
   <link rel="icon" href="./icons/favicon.png">
   <link rel="apple-touch-icon" href="./icons/apple-touch-icon.png">
 </head>
@@ -17,7 +17,7 @@
 <header class="topbar">
   <div>
     <div class="eyebrow">SPOOLMAN → NIIMBOT B1</div>
-    <div class="titleline"><h1>Spool Labels</h1><span class="version">v11</span></div>
+    <div class="titleline"><h1>Spool Labels</h1><span class="version">v12</span></div>
   </div>
   <div class="header-actions">
     <span id="modeBadge" class="pill">Lokal</span>
@@ -72,7 +72,7 @@
 
           <div class="editorcolumn simple-editor">
             <section class="quick-config">
-              <div class="sectionhead"><div><span class="eyebrow">VORLAGE</span><strong>Label wählen</strong></div><span id="quickTemplateFormat" class="smallbadge">–</span></div>
+              <div class="sectionhead"><div><span class="eyebrow">VORLAGE</span><strong>Label wählen</strong></div><div class="template-head-actions"><span id="quickTemplateFormat" class="smallbadge">–</span><button id="setDefaultTemplateBtn" class="btn ghost default-template-btn" type="button">☆ Als Standard</button></div></div>
               <div id="templateTiles" class="template-tiles" aria-label="Vorlagen"></div>
               <label class="sr-only"><span>Vorlage</span><select id="templateSelect"></select></label>
             </section>
@@ -161,8 +161,8 @@
 <div id="toast" class="toast"></div>
 <script src="https://unpkg.com/qrcode-generator@1.4.4/qrcode.js" defer></script>
 <script src="https://unpkg.com/niimbot-web-bluetooth@2.4.0/src/niimbot.js" defer></script>
-<script src="./config.js?v=11" defer></script>
-<script src="./storage.js?v=11" defer></script>
-<script src="./printer.js?v=11" defer></script>
-<script src="./app.js?v=11" defer></script>
+<script src="./config.js?v=12" defer></script>
+<script src="./storage.js?v=12" defer></script>
+<script src="./printer.js?v=12" defer></script>
+<script src="./app.js?v=12" defer></script>
 </body></html>
