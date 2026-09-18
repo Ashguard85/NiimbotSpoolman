@@ -1,6 +1,6 @@
 
 
-## v12 – vereinfachte Oberfläche
+## v13 – vereinfachte Oberfläche
 - Schnellansicht: Spool auswählen → Vorlage wählen → drucken.
 - Vorlagen als antippbare Kacheln.
 - Detailfunktionen unter „Label anpassen“ gruppiert, ohne Funktionen zu entfernen.
@@ -54,3 +54,5 @@
 
 - iPhone-Layout korrigiert: keine feste Tablet-Mindestbreite/kein großer horizontaler Leerraum mehr.
 - Ausgewählte Vorlage kann als Standard festgelegt werden; sie wird beim nächsten Start automatisch geladen.
+
+- v13: individuelle Textgrößen pro Textzeile mit [S], [M], [L], [XL] oder exakten Pixelwerten wie [22]. Größenbuttons im Editor setzen die Markierung für die aktuelle Zeile.
